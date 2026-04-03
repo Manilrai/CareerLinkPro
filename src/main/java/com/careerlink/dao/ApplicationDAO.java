@@ -102,4 +102,38 @@ public class ApplicationDAO {
         }
         return 0;
     }
+    // Count all applications (for admin)
+    public int countAllApplications() {
+        String sql = "SELECT COUNT(*) FROM applications";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting applications: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
+    // Count applications by student
+    public int countApplicationsByStudentId(int studentId) {
+        String sql = "SELECT COUNT(*) FROM applications " +
+                "WHERE student_id = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, studentId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
 }

@@ -220,4 +220,70 @@ public class InternshipDAO {
         }
         return 0;
     }
+    // Count all internships
+    public int countAllInternships() {
+        String sql = "SELECT COUNT(*) FROM internships";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting internships: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
+
+    // Get all open internships (for student browsing)
+    public List<Internship> getAllOpenInternships() {
+        String sql = "SELECT i.*, r.company_name FROM internships i " +
+                "JOIN recruiters r ON i.recruiter_id = r.recruiter_id " +
+                "WHERE i.status = 'open' AND i.deadline >= CURDATE() " +
+                "ORDER BY i.created_at DESC";
+        List<Internship> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Internship i = new Internship();
+                i.setInternshipId(rs.getInt("internship_id"));
+                i.setTitle(rs.getString("title"));
+                i.setDescription(rs.getString("description"));
+                i.setLocation(rs.getString("location"));
+                i.setDuration(rs.getString("duration"));
+                i.setStipend(rs.getString("stipend"));
+                i.setDeadline(rs.getDate("deadline"));
+                i.setStatus(rs.getString("status"));
+                i.setCompanyName(rs.getString("company_name"));
+                list.add(i);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting internships: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
+    // Count all open internships
+    public int countAllOpenInternships() {
+        String sql = "SELECT COUNT(*) FROM internships " +
+                "WHERE status = 'open' AND deadline >= CURDATE()";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
 }

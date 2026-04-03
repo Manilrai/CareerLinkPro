@@ -2,6 +2,8 @@ package com.careerlink.dao;
 
 import com.careerlink.model.User;
 import com.careerlink.util.DBConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.sql.*;
 
@@ -120,5 +122,130 @@ public class UserDAO {
             DBConnection.closeConnection(conn);
         }
         return null;
+    }
+    // Get user by email
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+                return user;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting user by email: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return null;
+    }
+    // Count all users
+    public int countAllUsers() {
+        String sql = "SELECT COUNT(*) FROM users WHERE role != 'admin'";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting users: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
+
+    // Count users by role
+    public int countByRole(String role) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, role);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting by role: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
+
+    // Count pending recruiters
+    public int countPendingRecruiters() {
+        String sql = "SELECT COUNT(*) FROM users " +
+                "WHERE role = 'recruiter' AND status = 'pending'";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error counting pending: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return 0;
+    }
+
+    // Get all users except admin
+    public List<User> getAllUsers() {
+        String sql = "SELECT * FROM users WHERE role != 'admin' " +
+                "ORDER BY created_at DESC";
+        List<User> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+                user.setRole(rs.getString("role"));
+                user.setStatus(rs.getString("status"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting users: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
+
+    // Update user status
+    public boolean updateUserStatus(int userId, String status) {
+        String sql = "UPDATE users SET status = ? WHERE user_id = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating status: " + e.getMessage());
+            return false;
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
     }
 }
