@@ -286,4 +286,46 @@ public class InternshipDAO {
         }
         return 0;
     }
+    // Search internships by keyword
+    public List<Internship> searchInternships(String keyword) {
+        String sql = "SELECT i.*, r.company_name FROM internships i " +
+                "JOIN recruiters r ON i.recruiter_id = r.recruiter_id " +
+                "WHERE i.status = 'open' AND i.deadline >= CURDATE() " +
+                "AND (i.title LIKE ? OR i.location LIKE ? " +
+                "OR r.company_name LIKE ? " +
+                "OR i.internship_id IN ( " +
+                "  SELECT internship_id FROM internship_skills " +
+                "  WHERE skill_name LIKE ?)) " +
+                "ORDER BY i.created_at DESC";
+        List<Internship> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            String kw = "%" + keyword + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            ps.setString(3, kw);
+            ps.setString(4, kw);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Internship i = new Internship();
+                i.setInternshipId(rs.getInt("internship_id"));
+                i.setTitle(rs.getString("title"));
+                i.setDescription(rs.getString("description"));
+                i.setLocation(rs.getString("location"));
+                i.setDuration(rs.getString("duration"));
+                i.setStipend(rs.getString("stipend"));
+                i.setDeadline(rs.getDate("deadline"));
+                i.setStatus(rs.getString("status"));
+                i.setCompanyName(rs.getString("company_name"));
+                list.add(i);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
 }

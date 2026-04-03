@@ -136,4 +136,75 @@ public class ApplicationDAO {
         }
         return 0;
     }
+    // Apply for internship
+    public boolean applyForInternship(Application application) {
+        String sql = "INSERT INTO applications (student_id, internship_id) " +
+                "VALUES (?, ?)";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, application.getStudentId());
+            ps.setInt(2, application.getInternshipId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error applying: " + e.getMessage());
+            return false;
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+    }
+
+    // Check if student already applied
+    public boolean hasApplied(int studentId, int internshipId) {
+        String sql = "SELECT application_id FROM applications " +
+                "WHERE student_id = ? AND internship_id = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, studentId);
+            ps.setInt(2, internshipId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("Error checking application: " + e.getMessage());
+            return false;
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+    }
+
+    // Get all applications by student
+    public List<Application> getApplicationsByStudentId(int studentId) {
+        String sql = "SELECT a.*, i.title as internship_title, " +
+                "r.company_name FROM applications a " +
+                "JOIN internships i ON a.internship_id = i.internship_id " +
+                "JOIN recruiters r ON i.recruiter_id = r.recruiter_id " +
+                "WHERE a.student_id = ? ORDER BY a.applied_at DESC";
+        List<Application> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, studentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Application app = new Application();
+                app.setApplicationId(rs.getInt("application_id"));
+                app.setStudentId(rs.getInt("student_id"));
+                app.setInternshipId(rs.getInt("internship_id"));
+                app.setAppliedAt(rs.getTimestamp("applied_at"));
+                app.setStatus(rs.getString("status"));
+                app.setInternshipTitle(rs.getString("internship_title"));
+                app.setFullName(rs.getString("company_name"));
+                list.add(app);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting applications: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
 }

@@ -155,8 +155,32 @@ public class StudentDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 skills.add(new int[]{
-                        rs.getInt("skill_id"),
                         rs.getInt("skill_id")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting skills: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return skills;
+    }
+
+    // Get skills as map with id and name
+    public List<String[]> getSkillsWithNameAndId(int studentId) {
+        String sql = "SELECT skill_id, skill_name FROM student_skills " +
+                "WHERE student_id = ?";
+        List<String[]> skills = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, studentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                skills.add(new String[]{
+                        String.valueOf(rs.getInt("skill_id")),
+                        rs.getString("skill_name")
                 });
             }
         } catch (SQLException e) {
