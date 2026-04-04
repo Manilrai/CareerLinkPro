@@ -60,4 +60,8 @@ public class Recruiter {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+    private String status;
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

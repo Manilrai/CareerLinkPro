@@ -2,6 +2,8 @@ package com.careerlink.dao;
 
 import com.careerlink.model.Recruiter;
 import com.careerlink.util.DBConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.sql.*;
 
@@ -82,5 +84,56 @@ public class RecruiterDAO {
             DBConnection.closeConnection(conn);
         }
         return -1;
+    }
+    // Get all recruiters with user details
+    public List<Recruiter> getAllRecruiters() {
+        String sql = "SELECT r.*, u.full_name, u.email, u.phone, u.status " +
+                "FROM recruiters r " +
+                "JOIN users u ON r.user_id = u.user_id " +
+                "ORDER BY r.recruiter_id DESC";
+        List<Recruiter> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Recruiter r = new Recruiter();
+                r.setRecruiterId(rs.getInt("recruiter_id"));
+                r.setUserId(rs.getInt("user_id"));
+                r.setCompanyName(rs.getString("company_name"));
+                r.setIndustry(rs.getString("industry"));
+                r.setWebsite(rs.getString("website"));
+                r.setVerified(rs.getString("verified"));
+                r.setFullName(rs.getString("full_name"));
+                r.setEmail(rs.getString("email"));
+                r.setPhone(rs.getString("phone"));
+                r.setStatus(rs.getString("status"));
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting recruiters: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
+
+    // Update verified status
+    public boolean updateVerifiedStatus(int userId, String verified) {
+        String sql = "UPDATE recruiters SET verified = ? WHERE user_id = ?";
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, verified);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating verified: " + e.getMessage());
+            return false;
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
     }
 }

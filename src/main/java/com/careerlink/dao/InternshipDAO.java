@@ -328,4 +328,36 @@ public class InternshipDAO {
         }
         return list;
     }
+    // Get all internships for admin view
+    public List<Internship> getAllInternshipsForAdmin() {
+        String sql = "SELECT i.*, r.company_name, " +
+                "(SELECT COUNT(*) FROM applications a " +
+                " WHERE a.internship_id = i.internship_id) AS app_count " +
+                "FROM internships i " +
+                "JOIN recruiters r ON i.recruiter_id = r.recruiter_id " +
+                "ORDER BY i.created_at DESC";
+        List<Internship> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Internship i = new Internship();
+                i.setInternshipId(rs.getInt("internship_id"));
+                i.setTitle(rs.getString("title"));
+                i.setLocation(rs.getString("location"));
+                i.setDeadline(rs.getDate("deadline"));
+                i.setStatus(rs.getString("status"));
+                i.setCompanyName(rs.getString("company_name"));
+                i.setApplicationCount(rs.getInt("app_count"));
+                list.add(i);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting internships: " + e.getMessage());
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return list;
+    }
 }
