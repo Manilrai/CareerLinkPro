@@ -15,7 +15,8 @@
 
   <div class="page-header">
     <h1>📋 Manage Internships</h1>
-    <a href="${pageContext.request.contextPath}/admin/dashboard"
+    <a href="${pageContext.request.contextPath}/admin/dashboard "
+
        class="btn btn-outline">← Dashboard</a>
   </div>
 

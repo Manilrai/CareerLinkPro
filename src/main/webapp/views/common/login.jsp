@@ -1,49 +1,78 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="header.jsp" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login — CareerLink Pro</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css"/>
+</head>
+<body>
 
-<div class="main-content">
-    <div style="max-width: 450px; margin: 3rem auto;">
-        <div class="card">
-            <h2 class="card-title" style="text-align:center;">Welcome Back 👋</h2>
-            <p style="text-align:center; color:var(--gray); margin-bottom:1.5rem;">
-                Login to your CareerLink Pro account
-            </p>
+<div class="auth-wrapper">
+    <div class="auth-box">
 
-            <!-- Error / Success Messages -->
-            <% if (request.getAttribute("error") != null) { %>
-            <div class="alert alert-danger"><%= request.getAttribute("error") %></div>
-            <% } %>
-            <% if (request.getAttribute("success") != null) { %>
-            <div class="alert alert-success"><%= request.getAttribute("success") %></div>
-            <% } %>
+        <!-- Logo -->
+        <div class="auth-logo">
+            <h1>Career<span>Link</span> Pro</h1>
+            <p>Internship Portal with Skill Gap Analyzer</p>
+        </div>
 
-            <form action="${pageContext.request.contextPath}/login" method="post">
+        <h2 class="auth-title">Welcome Back 👋</h2>
+        <p class="auth-subtitle">Login to your account to continue</p>
 
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email"
-                           placeholder="Enter your email" required/>
-                </div>
+        <% if (request.getAttribute("error") != null) { %>
+        <div class="alert alert-danger">
+            ⚠️ <%= request.getAttribute("error") %>
+        </div>
+        <% } %>
+        <% if (request.getAttribute("success") != null) { %>
+        <div class="alert alert-success">
+            ✅ <%= request.getAttribute("success") %>
+        </div>
+        <% } %>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password"
-                           placeholder="Enter your password" required/>
-                </div>
+        <form action="${pageContext.request.contextPath}/login" method="post">
 
-                <button type="submit" class="btn btn-primary"
-                        style="width:100%; margin-top:0.5rem;">
-                    Login
-                </button>
-            </form>
+            <div class="form-group">
+                <label for="email">📧 Email Address</label>
+                <input type="email" id="email" name="email"
+                       placeholder="Enter your email address" required/>
+            </div>
 
-            <p style="text-align:center; margin-top:1.2rem; font-size:0.9rem; color:var(--gray);">
+            <div class="form-group">
+                <label for="password">🔒 Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Enter your password" required/>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                    style="width:100%; padding:0.8rem; font-size:1rem;
+                           margin-top:0.5rem; border-radius:10px;">
+                Login to Account →
+            </button>
+        </form>
+
+        <div style="text-align:center; margin-top:1.5rem;
+                    padding-top:1.5rem; border-top:1px solid var(--border);">
+            <p style="color:var(--gray); font-size:0.9rem;">
                 Don't have an account?
                 <a href="${pageContext.request.contextPath}/views/common/register.jsp"
-                   style="color:var(--primary); font-weight:600;">Register here</a>
+                   style="color:var(--primary); font-weight:700;">
+                    Register here
+                </a>
             </p>
+            <div style="margin-top:1rem; display:flex; gap:0.5rem;
+                        justify-content:center; flex-wrap:wrap;">
+                <a href="${pageContext.request.contextPath}/views/common/about.jsp"
+                   style="color:var(--gray-light); font-size:0.85rem;">About</a>
+                <span style="color:var(--border);">•</span>
+                <a href="${pageContext.request.contextPath}/views/common/contact.jsp"
+                   style="color:var(--gray-light); font-size:0.85rem;">Contact</a>
+            </div>
         </div>
     </div>
 </div>
 
-<%@ include file="footer.jsp" %>
+</body>
+</html>
