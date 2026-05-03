@@ -28,7 +28,19 @@ public class SkillGapServlet extends HttpServlet {
         String idStr = request.getParameter("id");
         try {
             int internshipId = Integer.parseInt(idStr);
-            int studentId    = (int) session.getAttribute("studentId");
+            int studentId;
+            if (session.getAttribute("studentId") != null) {
+                studentId = (int) session.getAttribute("studentId");
+            } else {
+                com.careerlink.dao.StudentDAO sDAO = new com.careerlink.dao.StudentDAO();
+                com.careerlink.model.Student s = sDAO.getStudentByUserId((int) session.getAttribute("userId"));
+                if (s == null) {
+                    sDAO.createStudentProfile((int) session.getAttribute("userId"));
+                    s = sDAO.getStudentByUserId((int) session.getAttribute("userId"));
+                }
+                studentId = s.getStudentId();
+                session.setAttribute("studentId", studentId);
+            }
 
             InternshipDAO internshipDAO = new InternshipDAO();
             StudentDAO studentDAO       = new StudentDAO();

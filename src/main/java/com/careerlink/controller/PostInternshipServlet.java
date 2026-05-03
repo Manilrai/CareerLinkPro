@@ -43,7 +43,14 @@ public class PostInternshipServlet extends HttpServlet {
             return;
         }
 
-        int recruiterId = (int) session.getAttribute("recruiterId");
+        int recruiterId;
+        if (session.getAttribute("recruiterId") != null) {
+            recruiterId = (int) session.getAttribute("recruiterId");
+        } else {
+            com.careerlink.dao.RecruiterDAO rDAO = new com.careerlink.dao.RecruiterDAO();
+            recruiterId = rDAO.getRecruiterIdByUserId((int) session.getAttribute("userId"));
+            session.setAttribute("recruiterId", recruiterId);
+        }
 
         // Get form values
         String title       = request.getParameter("title");

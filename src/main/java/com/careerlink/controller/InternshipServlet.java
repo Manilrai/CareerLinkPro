@@ -1,6 +1,7 @@
 package com.careerlink.controller;
 
 import com.careerlink.dao.InternshipDAO;
+import com.careerlink.dao.RecruiterDAO;
 import com.careerlink.model.Internship;
 import com.careerlink.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -25,7 +26,16 @@ public class InternshipServlet extends HttpServlet {
             return;
         }
 
-        int recruiterId = (int) session.getAttribute("recruiterId");
+        // ── FIX: safely get recruiterId from session or fetch from DB ──
+        int recruiterId;
+        if (session.getAttribute("recruiterId") != null) {
+            recruiterId = (int) session.getAttribute("recruiterId");
+        } else {
+            RecruiterDAO rDAO = new RecruiterDAO();
+            recruiterId = rDAO.getRecruiterIdByUserId(
+                    (int) session.getAttribute("userId"));
+            session.setAttribute("recruiterId", recruiterId);
+        }
 
         // Check for success/error messages passed via URL
         String success = request.getParameter("success");

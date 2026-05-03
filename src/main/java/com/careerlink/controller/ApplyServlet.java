@@ -23,7 +23,19 @@ public class ApplyServlet extends HttpServlet {
         }
 
         String internshipIdStr = request.getParameter("internshipId");
-        int studentId          = (int) session.getAttribute("studentId");
+        int studentId;
+        if (session.getAttribute("studentId") != null) {
+            studentId = (int) session.getAttribute("studentId");
+        } else {
+            com.careerlink.dao.StudentDAO sDAO = new com.careerlink.dao.StudentDAO();
+            com.careerlink.model.Student s = sDAO.getStudentByUserId((int) session.getAttribute("userId"));
+            if (s == null) {
+                sDAO.createStudentProfile((int) session.getAttribute("userId"));
+                s = sDAO.getStudentByUserId((int) session.getAttribute("userId"));
+            }
+            studentId = s.getStudentId();
+            session.setAttribute("studentId", studentId);
+        }
 
         try {
             int internshipId = Integer.parseInt(internshipIdStr);

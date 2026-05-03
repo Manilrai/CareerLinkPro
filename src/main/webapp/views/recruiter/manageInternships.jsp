@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, com.careerlink.model.Internship" %>
 <%
     if (session.getAttribute("userId") == null ||
             !session.getAttribute("role").equals("recruiter")) {
@@ -29,42 +29,36 @@
             <table>
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Location</th>
-                    <th>Duration</th>
-                    <th>Deadline</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>#</th><th>Title</th><th>Location</th><th>Duration</th>
+                    <th>Deadline</th><th>Status</th><th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <%
-                    List internships = (List) request.getAttribute("internships");
+                    List<Internship> internships = (List<Internship>) request.getAttribute("internships");
                     if (internships != null && !internships.isEmpty()) {
                         int count = 1;
-                        for (Object obj : internships) {
-                            Map i = (Map) obj;
+                        for (Internship i : internships) {
                 %>
                 <tr>
                     <td><%= count++ %></td>
-                    <td><%= i.get("title") %></td>
-                    <td><%= i.get("location") %></td>
-                    <td><%= i.get("duration") %></td>
-                    <td><%= i.get("deadline") %></td>
+                    <td><strong><%= i.getTitle() %></strong></td>
+                    <td><%= i.getLocation() %></td>
+                    <td><%= i.getDuration() %></td>
+                    <td><%= i.getDeadline() %></td>
                     <td>
-                        <span class="badge <%= i.get("status").equals("open") ? "badge-success" : "badge-danger" %>">
-                            <%= i.get("status") %>
+                        <span class="badge <%= i.getStatus().equals("open") ? "badge-success" : "badge-danger" %>">
+                            <%= i.getStatus() %>
                         </span>
                     </td>
                     <td style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                        <a href="${pageContext.request.contextPath}/recruiter/editInternship?id=<%= i.get("internshipId") %>"
+                        <a href="${pageContext.request.contextPath}/recruiter/editInternship?id=<%= i.getInternshipId() %>"
                            class="btn btn-warning" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Edit</a>
-                        <a href="${pageContext.request.contextPath}/recruiter/applicants?id=<%= i.get("internshipId") %>"
+                        <a href="${pageContext.request.contextPath}/recruiter/applicants?id=<%= i.getInternshipId() %>"
                            class="btn btn-primary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Applicants</a>
-                        <a href="${pageContext.request.contextPath}/recruiter/deleteInternship?id=<%= i.get("internshipId") %>"
+                        <a href="${pageContext.request.contextPath}/recruiter/internships?action=delete&id=<%= i.getInternshipId() %>"
                            class="btn btn-danger" style="padding:0.3rem 0.8rem; font-size:0.8rem;"
-                           onclick="return confirm('Are you sure you want to delete this internship?')">Delete</a>
+                           onclick="return confirm('Delete this internship?')">Delete</a>
                     </td>
                 </tr>
                 <% } } else { %>
