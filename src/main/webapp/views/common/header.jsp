@@ -35,7 +35,6 @@
         <% } else if (role.equals("recruiter")) { %>
         <li><a href="${pageContext.request.contextPath}/recruiter/dashboard">Dashboard</a></li>
         <li><a href="${pageContext.request.contextPath}/recruiter/internships">My Internships</a></li>
-        <li><a href="${pageContext.request.contextPath}/recruiter/applicants">Applicants</a></li>
         <li><a href="${pageContext.request.contextPath}/logout" class="btn-nav">Logout</a></li>
 
         <% } else if (role.equals("student")) { %>

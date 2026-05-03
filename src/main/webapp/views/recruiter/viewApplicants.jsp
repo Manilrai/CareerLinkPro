@@ -53,7 +53,7 @@
                     <td><%= a.getAppliedAt() %></td>
                     <td><span class="badge <%= badgeClass %>"><%= status %></span></td>
                     <td>
-                        <form action="${pageContext.request.contextPath}/recruiter//recruiter/applicants"
+                        <form action="${pageContext.request.contextPath}/recruiter/applicants"
                               method="post" style="display:flex; gap:0.5rem; align-items:center;">
                             <input type="hidden" name="applicationId" value="<%= a.getApplicationId() %>"/>
                             <input type="hidden" name="internshipId" value="<%= a.getInternshipId() %>"/>
