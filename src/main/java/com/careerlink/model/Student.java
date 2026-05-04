@@ -1,7 +1,7 @@
 package com.careerlink.model;
 
 public class Student {
-
+    // Variables
     private int    studentId;
     private int    userId;
     private String dateOfBirth;

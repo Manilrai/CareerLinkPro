@@ -24,7 +24,7 @@ public class Application {
         this.internshipId = internshipId;
     }
 
-    // Getters and Setters
+    // Getters and Setters Methods
     public int getApplicationId() { return applicationId; }
     public void setApplicationId(int applicationId) {
         this.applicationId = applicationId;

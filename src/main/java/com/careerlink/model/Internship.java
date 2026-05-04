@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class Internship {
-
+    // Variables
     private int internshipId;
     private int recruiterId;
     private String title;

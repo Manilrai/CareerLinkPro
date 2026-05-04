@@ -28,7 +28,7 @@ public class Recruiter {
         this.industry = industry;
     }
 
-    // Getters and Setters
+    // Getters and Setters Methods
     public int getRecruiterId() { return recruiterId; }
     public void setRecruiterId(int recruiterId) { this.recruiterId = recruiterId; }
 
