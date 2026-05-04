@@ -30,7 +30,7 @@ public class DBConnection {
         return connection;
     }
 
-    // Close connection method
+    // Closed the connection method
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {

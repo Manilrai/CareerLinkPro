@@ -23,7 +23,7 @@ public class PasswordUtil {
         }
     }
 
-    // Check if entered password matches stored encrypted password
+    // Check if entered password matches stored the encrypted password
     public static boolean verify(String enteredPassword, String storedPassword) {
         return encrypt(enteredPassword).equals(storedPassword);
     }

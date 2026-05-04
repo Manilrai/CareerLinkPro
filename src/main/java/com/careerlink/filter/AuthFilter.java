@@ -23,6 +23,7 @@ public class AuthFilter implements Filter {
             "/js/"
     };
 
+    // Constructor
     public void doFilter(ServletRequest req, ServletResponse res,
                          FilterChain chain)
             throws IOException, ServletException {

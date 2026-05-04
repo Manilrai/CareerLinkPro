@@ -22,7 +22,7 @@ public class ValidationUtil {
         return name != null && name.matches("^[a-zA-Z ]+$");
     }
 
-    // Check if password is at least 6 characters
+    // Check if the password is at least 6 characters
     public static boolean isValidPassword(String password) {
         return password != null && password.length() >= 6;
     }
