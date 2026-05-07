@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ApplicationDAO {
 
-    // Get all applicants for an internship
+    // Get all applicants for an internships
     public List<Application> getApplicantsByInternshipId(int internshipId) {
         String sql = "SELECT a.*, u.full_name, u.email, u.phone " +
                 "FROM applications a " +
