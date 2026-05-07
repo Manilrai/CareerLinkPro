@@ -1,3 +1,8 @@
+/**
+ * @author Prakriti - Member 1
+ * CareerLink Pro - CS5054NT
+ * Model Classes
+ */
 package com.careerlink.model;
 
 public class Student {
