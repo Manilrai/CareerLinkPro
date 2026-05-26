@@ -8,13 +8,13 @@ public class DBConnection {
 
     // Database settings
     private static final String HOST = "127.0.0.1";
-    private static final String PORT = "3307";
+    private static final String PORT = "3306";
     private static final String DATABASE = "careerlink_db";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "1234";
 
     // Connection URL
-    private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
 
     // Get connection method
     public static Connection getConnection() {
